@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AI Career Recommendation</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
+
+<div class="container">
+
+<a class="navbar-brand fw-bold" href="/">
+🚀 Career Compass AI
+</a>
+
+<div class="navbar-nav ms-auto">
+
+<a class="nav-link" href="/">Home</a>
+
+<a class="nav-link" href="/career">Career</a>
+
+<a class="nav-link" href="/summarizer">Summarizer</a>
+
+</div>
+
+</div>
+
+</nav>
+
+<div class="container py-5">
+
+<div class="text-center mb-5">
+
+<h1 class="display-4 fw-bold">
+
+🎯 AI Career Recommendation
+
+</h1>
+
+<p class="lead">
+
+Generated using Google Gemini AI
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card bg-dark text-white shadow-lg p-5">
+
+<h3 class="text-info">
+
+👤 Student Details
+
+</h3>
+
+<hr>
+
+<div class="row">
+
+<div class="col-md-6">
+
+<p><strong>Degree:</strong> {{ degree }}</p>
+
+<p><strong>Interest:</strong> {{ interest }}</p>
+
+</div>
+
+<div class="col-md-6">
+
+<p><strong>Skills:</strong> {{ skills }}</p>
+
+<p><strong>Location:</strong> {{ location }}</p>
+
+</div>
+
+</div>
+
+<hr>
+
+<h3 class="text-success">
+
+🤖 Gemini AI Recommendation
+
+</h3>
+
+<div class="summary-box mt-4" style="white-space: pre-wrap;">
+
+{{ ai_result }}
+
+</div>
+
+<div class="d-grid gap-2 mt-5">
+
+<a href="/career" class="btn btn-primary btn-lg">
+
+Analyze Another Career
+
+</a>
+
+<a href="/" class="btn btn-outline-light btn-lg">
+
+Back to Home
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<footer class="text-center py-3">
+
+<p class="text-light">
+
+© 2026 Career Compass AI | Powered by Gemini AI
+
+</p>
+
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

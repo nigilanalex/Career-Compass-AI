@@ -1,0 +1,263 @@
+/* ===========================
+   Career Compass AI
+   Modern UI
+=========================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:linear-gradient(135deg,#0F172A,#1E293B,#0F172A);
+    color:#ffffff;
+    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+    min-height:100vh;
+}
+
+/* Navbar */
+
+.navbar{
+    background:#111827 !important;
+    box-shadow:0 5px 20px rgba(0,0,0,.35);
+}
+
+.navbar-brand{
+    font-size:24px;
+    font-weight:700;
+}
+
+.nav-link{
+    color:#d1d5db !important;
+    margin-left:15px;
+    transition:.3s;
+}
+
+.nav-link:hover{
+    color:#38bdf8 !important;
+}
+
+/* Hero */
+
+.hero{
+    min-height:90vh;
+    display:flex;
+    align-items:center;
+}
+
+.hero h1{
+    font-size:58px;
+    font-weight:800;
+}
+
+.hero p{
+    color:#cbd5e1;
+    font-size:20px;
+    line-height:1.8;
+}
+
+/* Cards */
+
+.card{
+    background:#1E293B !important;
+    border:none;
+    border-radius:18px;
+    transition:.35s;
+    overflow:hidden;
+}
+
+.card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 20px 40px rgba(0,0,0,.45);
+}
+
+.card-body{
+    padding:30px;
+}
+
+/* Forms */
+
+.form-control,
+.form-select{
+    background:#0F172A;
+    color:white;
+    border:1px solid #334155;
+    border-radius:12px;
+    padding:12px;
+}
+
+.form-control:focus,
+.form-select:focus{
+    background:#0F172A;
+    color:white;
+    border-color:#3b82f6;
+    box-shadow:0 0 0 .2rem rgba(59,130,246,.25);
+}
+
+.form-control::placeholder{
+    color:#94a3b8;
+}
+
+/* Buttons */
+
+.btn{
+    border-radius:12px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.btn-primary{
+    background:#2563eb;
+    border:none;
+}
+
+.btn-primary:hover{
+    background:#1d4ed8;
+    transform:translateY(-2px);
+}
+
+.btn-success{
+    background:#10b981;
+    border:none;
+}
+
+.btn-success:hover{
+    background:#059669;
+    transform:translateY(-2px);
+}
+
+.btn-outline-light:hover{
+    color:#111827;
+}
+
+/* Tables */
+
+.table{
+    border-radius:12px;
+    overflow:hidden;
+}
+
+.table th{
+    width:220px;
+}
+
+/* Summary Box */
+
+.summary-box{
+    background:#0F172A;
+    border:1px solid #334155;
+    border-radius:15px;
+    padding:25px;
+    line-height:1.9;
+    font-size:17px;
+    white-space:pre-wrap;
+}
+
+/* List */
+
+.list-group-item{
+    background:#0F172A;
+    color:white;
+    border:1px solid #334155;
+}
+
+/* Alerts */
+
+.alert-primary{
+    background:#1d4ed8;
+    color:white;
+    border:none;
+}
+
+/* Footer */
+
+footer{
+    margin-top:50px;
+    color:#94a3b8;
+}
+
+/* Spinner */
+
+.spinner-border{
+    width:4rem;
+    height:4rem;
+}
+
+/* Images */
+
+img{
+    max-width:100%;
+}
+
+/* Containers */
+
+.container{
+    max-width:1200px;
+}
+
+/* Titles */
+
+.display-4,
+.display-3{
+    font-weight:800;
+}
+
+.text-info{
+    color:#38bdf8 !important;
+}
+
+.text-success{
+    color:#22c55e !important;
+}
+
+.text-warning{
+    color:#facc15 !important;
+}
+
+/* Scrollbar */
+
+::-webkit-scrollbar{
+    width:10px;
+}
+
+::-webkit-scrollbar-track{
+    background:#0F172A;
+}
+
+::-webkit-scrollbar-thumb{
+    background:#2563eb;
+    border-radius:20px;
+}
+
+::-webkit-scrollbar-thumb:hover{
+    background:#1d4ed8;
+}
+
+/* Responsive */
+
+@media(max-width:768px){
+
+.hero{
+    min-height:auto;
+    padding:60px 0;
+    text-align:center;
+}
+
+.hero h1{
+    font-size:40px;
+}
+
+.display-4{
+    font-size:34px;
+}
+
+.card{
+    margin-bottom:20px;
+}
+
+.navbar-nav{
+    text-align:center;
+}
+
+}

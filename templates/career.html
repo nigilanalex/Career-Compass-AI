@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Career Analysis</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<!-- Navbar -->
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
+
+    <div class="container">
+
+        <a class="navbar-brand fw-bold" href="/">
+            🚀 Career Compass AI
+        </a>
+
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav">
+
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+
+            <div class="navbar-nav ms-auto">
+
+                <a class="nav-link" href="/">Home</a>
+
+                <a class="nav-link active" href="/career">Career</a>
+
+                <a class="nav-link" href="/summarizer">Summarizer</a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</nav>
+
+<!-- Main -->
+
+<div class="container py-5">
+
+    <div class="text-center mb-5">
+
+        <h1 class="display-4 fw-bold">
+            🎯 Career Recommendation AI
+        </h1>
+
+        <p class="lead">
+            Enter your details to receive an AI-powered career recommendation.
+        </p>
+
+    </div>
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8">
+
+            <div class="card bg-dark text-white shadow-lg p-4">
+
+                <form id="careerForm" action="/result" method="POST">
+
+                    <div class="mb-3">
+
+                        <label class="form-label">Degree</label>
+
+                        <select class="form-select" name="degree" required>
+
+                            <option value="">Select Degree</option>
+
+                            <option>Computer Science</option>
+
+                            <option>Artificial Intelligence</option>
+
+                            <option>Information Technology</option>
+
+                            <option>Cyber Security</option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">Interest</label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="interest"
+                            placeholder="Machine Learning"
+                            required>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">Skills</label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="skills"
+                            placeholder="Python, SQL, Git"
+                            required>
+
+                    </div>
+
+                    <div class="mb-4">
+
+                        <label class="form-label">Location</label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="location"
+                            placeholder="Chennai"
+                            required>
+
+                    </div>
+
+                    <button
+                        id="analyzeBtn"
+                        class="btn btn-primary btn-lg w-100">
+
+                        🚀 Analyze Career
+
+                    </button>
+
+                </form>
+
+                <!-- Loading Animation -->
+
+                <div id="careerLoading"
+                     class="text-center mt-5"
+                     style="display:none;">
+
+                    <div class="spinner-border text-info"
+                         style="width:70px;height:70px;"
+                         role="status">
+                    </div>
+
+                    <h3 class="mt-4">
+                        🤖 Career Compass AI is Analyzing...
+                    </h3>
+
+                    <p class="lead mt-3">
+
+                        ✅ Reading your profile...<br>
+                        ✅ Matching your interests...<br>
+                        ✅ Comparing thousands of careers...<br>
+                        ✅ Generating Top 3 recommendations...<br>
+                        ✅ Preparing AI career report...
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+document.getElementById("careerForm").addEventListener("submit", function(){
+
+    document.getElementById("analyzeBtn").disabled = true;
+
+    document.getElementById("analyzeBtn").innerHTML =
+    "⏳ Please Wait...";
+
+    document.getElementById("careerLoading").style.display = "block";
+
+});
+
+</script>
+
+</body>
+</html>
