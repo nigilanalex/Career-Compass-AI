@@ -1,7 +1,12 @@
 from flask import Flask, render_template, request
 from dataset.career_data import career_database
 from google import genai
-from config import GEMINI_API_KEY
+import os
+
+try:
+    from config import GEMINI_API_KEY
+except ImportError:
+    GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 from pypdf import PdfReader
 import os
 
@@ -244,4 +249,5 @@ Report:
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
