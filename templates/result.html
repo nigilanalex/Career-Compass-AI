@@ -15,6 +15,8 @@
 
 <body>
 
+<!-- Navbar -->
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
 
 <div class="container">
@@ -37,23 +39,23 @@
 
 </nav>
 
+
+<!-- Main Content -->
+
 <div class="container py-5">
 
 <div class="text-center mb-5">
 
 <h1 class="display-4 fw-bold">
-
 🎯 AI Career Recommendation
-
 </h1>
 
 <p class="lead">
-
 Generated using Google Gemini AI
-
 </p>
 
 </div>
+
 
 <div class="row justify-content-center">
 
@@ -62,9 +64,7 @@ Generated using Google Gemini AI
 <div class="card bg-dark text-white shadow-lg p-5">
 
 <h3 class="text-info">
-
-👤 Student Details
-
+👤 Student Profile
 </h3>
 
 <hr>
@@ -75,15 +75,29 @@ Generated using Google Gemini AI
 
 <p><strong>Degree:</strong> {{ degree }}</p>
 
-<p><strong>Interest:</strong> {{ interest }}</p>
+<p><strong>Year of Study:</strong> {{ year }}</p>
+
+<p><strong>Specialization:</strong> {{ specialization }}</p>
+
+<p><strong>Career Interest:</strong> {{ interest }}</p>
+
+<p><strong>Technical Skills:</strong> {{ skills }}</p>
 
 </div>
 
 <div class="col-md-6">
 
-<p><strong>Skills:</strong> {{ skills }}</p>
+<p><strong>Programming Languages:</strong> {{ languages }}</p>
 
-<p><strong>Location:</strong> {{ location }}</p>
+<p><strong>Experience Level:</strong> {{ experience }}</p>
+
+<p><strong>Preferred Industry:</strong> {{ industry }}</p>
+
+<p><strong>Work Preference:</strong> {{ work }}</p>
+
+<p><strong>Preferred Location:</strong> {{ location }}</p>
+
+<p><strong>Career Goal:</strong> {{ goal }}</p>
 
 </div>
 
@@ -92,12 +106,12 @@ Generated using Google Gemini AI
 <hr>
 
 <h3 class="text-success">
-
-🤖 Gemini AI Recommendation
-
+🤖 Gemini AI Career Report
 </h3>
 
-<div class="summary-box mt-4" style="white-space: pre-wrap;">
+<div
+class="summary-box mt-4 p-3 rounded"
+style="white-space: pre-wrap; background:#1f1f1f;">
 
 {{ ai_result }}
 
@@ -106,15 +120,11 @@ Generated using Google Gemini AI
 <div class="d-grid gap-2 mt-5">
 
 <a href="/career" class="btn btn-primary btn-lg">
-
-Analyze Another Career
-
+🔄 Analyze Another Career
 </a>
 
 <a href="/" class="btn btn-outline-light btn-lg">
-
-Back to Home
-
+🏠 Back to Home
 </a>
 
 </div>
@@ -127,12 +137,11 @@ Back to Home
 
 </div>
 
+
 <footer class="text-center py-3">
 
-<p class="text-light">
-
-© 2026 Career Compass AI | Powered by Gemini AI
-
+<p class="text-light mb-0">
+© 2026 Career Compass AI | Powered by Google Gemini AI
 </p>
 
 </footer>
