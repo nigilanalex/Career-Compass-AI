@@ -1,8 +1,7 @@
 career_database = {
-
     "Artificial Intelligence": {
         "career": "Machine Learning Engineer",
-        "salary": "₹8 - ₹12 LPA",
+        "salary": "INR 8 - INR 12 LPA",
         "demand": "Very High",
         "skills": [
             "Python",
@@ -15,7 +14,7 @@ career_database = {
 
     "Computer Science": {
         "career": "Software Developer",
-        "salary": "₹6 - ₹10 LPA",
+        "salary": "INR 6 - INR 10 LPA",
         "demand": "High",
         "skills": [
             "Python",
@@ -27,7 +26,7 @@ career_database = {
 
     "Cyber Security": {
         "career": "Cyber Security Analyst",
-        "salary": "₹7 - ₹11 LPA",
+        "salary": "INR 7 - INR 11 LPA",
         "demand": "High",
         "skills": [
             "Networking",
@@ -39,7 +38,7 @@ career_database = {
 
     "Information Technology": {
         "career": "System Engineer",
-        "salary": "₹5 - ₹8 LPA",
+        "salary": "INR 5 - INR 8 LPA",
         "demand": "Medium",
         "skills": [
             "Networking",
@@ -48,5 +47,4 @@ career_database = {
             "Cloud"
         ]
     }
-
 }

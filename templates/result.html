@@ -1,152 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>AI Career Recommendation</title>
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
-
-<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Career Recommendation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-
 <body>
-
-<!-- Navbar -->
-
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
-
-<div class="container">
-
-<a class="navbar-brand fw-bold" href="/">
-🚀 Career Compass AI
-</a>
-
-<div class="navbar-nav ms-auto">
-
-<a class="nav-link" href="/">Home</a>
-
-<a class="nav-link" href="/career">Career</a>
-
-<a class="nav-link" href="/summarizer">Summarizer</a>
-
-</div>
-
-</div>
-
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/">
+            <i class="bi bi-compass me-2"></i>Career Compass AI
+        </a>
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link" href="/">Home</a>
+            <a class="nav-link" href="/career">Career</a>
+            <a class="nav-link" href="/summarizer">Summarizer</a>
+        </div>
+    </div>
 </nav>
 
+<main class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold">
+            <i class="bi bi-bullseye me-2"></i>AI Career Recommendation
+        </h1>
+        <p class="lead">Generated using Google Gemini AI</p>
+    </div>
 
-<!-- Main Content -->
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card bg-dark text-white shadow-lg p-5">
+                <h3 class="text-info">
+                    <i class="bi bi-person-vcard me-2"></i>Student Profile
+                </h3>
+                <hr>
 
-<div class="container py-5">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Degree:</strong> {{ degree }}</p>
+                        <p><strong>Year of Study:</strong> {{ year }}</p>
+                        <p><strong>Specialization:</strong> {{ specialization }}</p>
+                        <p><strong>Career Interest:</strong> {{ interest }}</p>
+                        <p><strong>Technical Skills:</strong> {{ skills }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Programming Languages:</strong> {{ languages }}</p>
+                        <p><strong>Experience Level:</strong> {{ experience }}</p>
+                        <p><strong>Preferred Industry:</strong> {{ industry }}</p>
+                        <p><strong>Work Preference:</strong> {{ work }}</p>
+                        <p><strong>Preferred Location:</strong> {{ location }}</p>
+                        <p><strong>Career Goal:</strong> {{ goal }}</p>
+                    </div>
+                </div>
 
-<div class="text-center mb-5">
+                <hr>
 
-<h1 class="display-4 fw-bold">
-🎯 AI Career Recommendation
-</h1>
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+                    <h3 class="text-success mb-0">
+                        <i class="bi bi-stars me-2"></i>Gemini AI Career Report
+                    </h3>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-outline-light" id="copyReport">
+                            <i class="bi bi-clipboard me-2"></i>Copy
+                        </button>
+                        <button type="button" class="btn btn-outline-light" id="downloadReport">
+                            <i class="bi bi-download me-2"></i>Download
+                        </button>
+                    </div>
+                </div>
 
-<p class="lead">
-Generated using Google Gemini AI
-</p>
+                <div id="careerReport" class="summary-box mt-4 p-3 rounded" style="white-space: pre-wrap; background:#1f1f1f;">{{ ai_result }}</div>
 
-</div>
-
-
-<div class="row justify-content-center">
-
-<div class="col-lg-10">
-
-<div class="card bg-dark text-white shadow-lg p-5">
-
-<h3 class="text-info">
-👤 Student Profile
-</h3>
-
-<hr>
-
-<div class="row">
-
-<div class="col-md-6">
-
-<p><strong>Degree:</strong> {{ degree }}</p>
-
-<p><strong>Year of Study:</strong> {{ year }}</p>
-
-<p><strong>Specialization:</strong> {{ specialization }}</p>
-
-<p><strong>Career Interest:</strong> {{ interest }}</p>
-
-<p><strong>Technical Skills:</strong> {{ skills }}</p>
-
-</div>
-
-<div class="col-md-6">
-
-<p><strong>Programming Languages:</strong> {{ languages }}</p>
-
-<p><strong>Experience Level:</strong> {{ experience }}</p>
-
-<p><strong>Preferred Industry:</strong> {{ industry }}</p>
-
-<p><strong>Work Preference:</strong> {{ work }}</p>
-
-<p><strong>Preferred Location:</strong> {{ location }}</p>
-
-<p><strong>Career Goal:</strong> {{ goal }}</p>
-
-</div>
-
-</div>
-
-<hr>
-
-<h3 class="text-success">
-🤖 Gemini AI Career Report
-</h3>
-
-<div
-class="summary-box mt-4 p-3 rounded"
-style="white-space: pre-wrap; background:#1f1f1f;">
-
-{{ ai_result }}
-
-</div>
-
-<div class="d-grid gap-2 mt-5">
-
-<a href="/career" class="btn btn-primary btn-lg">
-🔄 Analyze Another Career
-</a>
-
-<a href="/" class="btn btn-outline-light btn-lg">
-🏠 Back to Home
-</a>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
+                <div class="d-grid gap-2 mt-5">
+                    <a href="/career" class="btn btn-primary btn-lg">
+                        <i class="bi bi-arrow-repeat me-2"></i>Analyze Another Career
+                    </a>
+                    <a href="/" class="btn btn-outline-light btn-lg">
+                        <i class="bi bi-house-door me-2"></i>Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
 
 <footer class="text-center py-3">
-
-<p class="text-light mb-0">
-© 2026 Career Compass AI | Powered by Google Gemini AI
-</p>
-
+    <p class="text-light mb-0">&copy; 2026 Career Compass AI | Powered by Google Gemini AI</p>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const report = document.getElementById("careerReport");
+    const copyReport = document.getElementById("copyReport");
+    const downloadReport = document.getElementById("downloadReport");
 
+    copyReport.addEventListener("click", async () => {
+        await navigator.clipboard.writeText(report.innerText);
+        copyReport.innerHTML = '<i class="bi bi-check2 me-2"></i>Copied';
+        setTimeout(() => {
+            copyReport.innerHTML = '<i class="bi bi-clipboard me-2"></i>Copy';
+        }, 1600);
+    });
+
+    downloadReport.addEventListener("click", () => {
+        const blob = new Blob([report.innerText], { type: "text/plain" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "career-report.txt";
+        link.click();
+        URL.revokeObjectURL(link.href);
+    });
+</script>
 </body>
 </html>
