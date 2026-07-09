@@ -15,6 +15,7 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # Gemini Client
+
 client = genai.Client(api_key=GEMINI_API_KEY)
 
 
