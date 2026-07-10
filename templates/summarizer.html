@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Report Summarizer</title>
+    <title>AI Resume Analyzer</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -18,7 +18,8 @@
         <div class="navbar-nav ms-auto">
             <a class="nav-link" href="/">Home</a>
             <a class="nav-link" href="/career">Career</a>
-            <a class="nav-link active" href="/summarizer">Summarizer</a>
+            <a class="nav-link active" href="/summarizer">Resume Analyzer</a>
+            <a class="nav-link" href="/admin/logs">Logs</a>
         </div>
     </div>
 </nav>
@@ -26,9 +27,9 @@
 <main class="container py-5">
     <div class="text-center mb-5">
         <h1 class="display-4 fw-bold">
-            <i class="bi bi-file-earmark-text me-2"></i>AI Report Summarizer
+            <i class="bi bi-file-earmark-person me-2"></i>AI Resume Analyzer
         </h1>
-        <p class="lead">Upload any PDF report and let Google Gemini AI generate a smart summary.</p>
+        <p class="lead">Upload a resume PDF to get a professional summary, skill gaps, and recommended job roles.</p>
     </div>
 
     <div class="row justify-content-center">
@@ -42,23 +43,24 @@
 
                 <form id="summaryForm" action="/summarize" method="POST" enctype="multipart/form-data">
                     <div class="mb-4">
-                        <label class="form-label">Select PDF File</label>
+                        <label class="form-label">Select Resume PDF</label>
                         <input type="file" name="pdf" class="form-control" accept=".pdf,application/pdf" required>
                     </div>
 
                     <div class="d-grid">
                         <button id="submitBtn" class="btn btn-primary btn-lg">
-                            <i class="bi bi-stars me-2"></i>Summarize with Gemini AI
+                            <i class="bi bi-stars me-2"></i>Analyze Resume
                         </button>
                     </div>
                 </form>
 
                 <div id="loading" style="display:none;" class="text-center mt-5">
                     <div class="spinner-border text-info" role="status"></div>
-                    <h4 class="mt-4">AI is analyzing your document...</h4>
+                    <h4 class="mt-4">AI is analyzing your resume...</h4>
                     <p class="text-light">
                         Extracting text...<br>
-                        Generating summary...<br>
+                        Matching job roles...<br>
+                        Preparing recommendations...<br>
                         Please wait...
                     </p>
                 </div>

@@ -22,7 +22,8 @@
             <div class="navbar-nav ms-auto">
                 <a class="nav-link" href="/">Home</a>
                 <a class="nav-link active" href="/career">Career</a>
-                <a class="nav-link" href="/summarizer">Summarizer</a>
+                <a class="nav-link" href="/summarizer">Resume Analyzer</a>
+                <a class="nav-link" href="/admin/logs">Logs</a>
             </div>
         </div>
     </div>
@@ -79,26 +80,92 @@
 
                     <div class="mb-3">
                         <label class="form-label">Career Interest</label>
-                        <input type="text" class="form-control" name="interest" placeholder="Machine Learning, Robotics, Software Development" required>
+                        <div class="checkbox-grid" data-required-group="interest">
+                            <label class="form-check option-check">
+                                <input class="form-check-input" type="checkbox" name="interest" value="Machine Learning">
+                                <span class="form-check-label">Machine Learning</span>
+                            </label>
+                            <label class="form-check option-check">
+                                <input class="form-check-input" type="checkbox" name="interest" value="Robotics">
+                                <span class="form-check-label">Robotics</span>
+                            </label>
+                            <label class="form-check option-check">
+                                <input class="form-check-input" type="checkbox" name="interest" value="Software Development">
+                                <span class="form-check-label">Software Development</span>
+                            </label>
+                            <label class="form-check option-check">
+                                <input class="form-check-input" type="checkbox" name="interest" value="Data Science">
+                                <span class="form-check-label">Data Science</span>
+                            </label>
+                            <label class="form-check option-check">
+                                <input class="form-check-input" type="checkbox" name="interest" value="Cyber Security">
+                                <span class="form-check-label">Cyber Security</span>
+                            </label>
+                            <label class="form-check option-check">
+                                <input class="form-check-input" type="checkbox" name="interest" value="Web Development">
+                                <span class="form-check-label">Web Development</span>
+                            </label>
+                        </div>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Technical Skills</label>
-                        <input type="text" class="form-control" name="skills" placeholder="Python, SQL, Git, React" required>
+                        <div class="checkbox-grid" data-required-group="skills">
+                            <label class="form-check option-check">
+                                <input class="form-check-input" type="checkbox" name="skills" value="Python">
+                                <span class="form-check-label">Python</span>
+                            </label>
+                            <label class="form-check option-check">
+                                <input class="form-check-input" type="checkbox" name="skills" value="SQL">
+                                <span class="form-check-label">SQL</span>
+                            </label>
+                            <label class="form-check option-check">
+                                <input class="form-check-input" type="checkbox" name="skills" value="Git">
+                                <span class="form-check-label">Git</span>
+                            </label>
+                            <label class="form-check option-check">
+                                <input class="form-check-input" type="checkbox" name="skills" value="React">
+                                <span class="form-check-label">React</span>
+                            </label>
+                            <label class="form-check option-check">
+                                <input class="form-check-input" type="checkbox" name="skills" value="Excel">
+                                <span class="form-check-label">Excel</span>
+                            </label>
+                            <label class="form-check option-check">
+                                <input class="form-check-input" type="checkbox" name="skills" value="Cloud Basics">
+                                <span class="form-check-label">Cloud Basics</span>
+                            </label>
+                        </div>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Programming Languages</label>
-                        <input type="text" class="form-control" name="languages" placeholder="Python, Java, C++, JavaScript">
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Experience Level</label>
-                        <select class="form-select" name="experience">
-                            <option>Beginner</option>
-                            <option>Intermediate</option>
-                            <option>Advanced</option>
-                        </select>
+                        <div class="checkbox-grid">
+                            <label class="form-check option-check">
+                                <input class="form-check-input" type="checkbox" name="languages" value="Python">
+                                <span class="form-check-label">Python</span>
+                            </label>
+                            <label class="form-check option-check">
+                                <input class="form-check-input" type="checkbox" name="languages" value="Java">
+                                <span class="form-check-label">Java</span>
+                            </label>
+                            <label class="form-check option-check">
+                                <input class="form-check-input" type="checkbox" name="languages" value="C++">
+                                <span class="form-check-label">C++</span>
+                            </label>
+                            <label class="form-check option-check">
+                                <input class="form-check-input" type="checkbox" name="languages" value="JavaScript">
+                                <span class="form-check-label">JavaScript</span>
+                            </label>
+                            <label class="form-check option-check">
+                                <input class="form-check-input" type="checkbox" name="languages" value="C">
+                                <span class="form-check-label">C</span>
+                            </label>
+                            <label class="form-check option-check">
+                                <input class="form-check-input" type="checkbox" name="languages" value="TypeScript">
+                                <span class="form-check-label">TypeScript</span>
+                            </label>
+                        </div>
                     </div>
 
                     <div class="mb-3">
@@ -124,7 +191,32 @@
 
                     <div class="mb-3">
                         <label class="form-label">Preferred Location</label>
-                        <input type="text" class="form-control" name="location" placeholder="Chennai, Bangalore, Remote" required>
+                        <div class="checkbox-grid" data-required-group="location">
+                            <label class="form-check option-check">
+                                <input class="form-check-input" type="checkbox" name="location" value="Chennai">
+                                <span class="form-check-label">Chennai</span>
+                            </label>
+                            <label class="form-check option-check">
+                                <input class="form-check-input" type="checkbox" name="location" value="Bangalore">
+                                <span class="form-check-label">Bangalore</span>
+                            </label>
+                            <label class="form-check option-check">
+                                <input class="form-check-input" type="checkbox" name="location" value="Hyderabad">
+                                <span class="form-check-label">Hyderabad</span>
+                            </label>
+                            <label class="form-check option-check">
+                                <input class="form-check-input" type="checkbox" name="location" value="Pune">
+                                <span class="form-check-label">Pune</span>
+                            </label>
+                            <label class="form-check option-check">
+                                <input class="form-check-input" type="checkbox" name="location" value="Mumbai">
+                                <span class="form-check-label">Mumbai</span>
+                            </label>
+                            <label class="form-check option-check">
+                                <input class="form-check-input" type="checkbox" name="location" value="Remote">
+                                <span class="form-check-label">Remote</span>
+                            </label>
+                        </div>
                     </div>
 
                     <div class="mb-4">
@@ -155,10 +247,26 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    document.getElementById("careerForm").addEventListener("submit", function () {
+    document.getElementById("careerForm").addEventListener("submit", function (event) {
+        const requiredGroups = document.querySelectorAll("[data-required-group]");
+        const missingGroup = Array.from(requiredGroups).find((group) => {
+            return !group.querySelector("input[type='checkbox']:checked");
+        });
+
+        if (missingGroup) {
+            event.preventDefault();
+            missingGroup.classList.add("checkbox-grid-error");
+            missingGroup.scrollIntoView({ behavior: "smooth", block: "center" });
+            return;
+        }
+
         document.getElementById("analyzeBtn").disabled = true;
         document.getElementById("analyzeBtn").innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Please Wait...';
         document.getElementById("careerLoading").style.display = "block";
+    });
+
+    document.querySelectorAll(".checkbox-grid").forEach((group) => {
+        group.addEventListener("change", () => group.classList.remove("checkbox-grid-error"));
     });
 </script>
 </body>

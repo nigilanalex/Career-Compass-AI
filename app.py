@@ -2,7 +2,9 @@ from flask import Flask, render_template, request
 from google import genai
 from pypdf import PdfReader
 from werkzeug.utils import secure_filename
+from datetime import datetime
 import os
+import sqlite3
 
 try:
     from config import GEMINI_API_KEY
@@ -14,6 +16,7 @@ app = Flask(__name__)
 
 UPLOAD_FOLDER = "uploads"
 ALLOWED_EXTENSIONS = {"pdf"}
+DATABASE_PATH = "career_compass.db"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -23,6 +26,102 @@ client = genai.Client(api_key=GEMINI_API_KEY)
 
 def allowed_pdf(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def get_db_connection():
+    connection = sqlite3.connect(DATABASE_PATH)
+    connection.row_factory = sqlite3.Row
+    return connection
+
+
+def init_db():
+    with get_db_connection() as connection:
+        connection.execute("""
+            CREATE TABLE IF NOT EXISTS app_events (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                level TEXT NOT NULL,
+                message TEXT NOT NULL,
+                details TEXT,
+                created_at TEXT NOT NULL
+            )
+        """)
+        connection.execute("""
+            CREATE TABLE IF NOT EXISTS career_analyses (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                degree TEXT,
+                year TEXT,
+                specialization TEXT,
+                interest TEXT,
+                skills TEXT,
+                languages TEXT,
+                industry TEXT,
+                work_style TEXT,
+                location TEXT,
+                goal TEXT,
+                ai_result TEXT,
+                created_at TEXT NOT NULL
+            )
+        """)
+        connection.execute("""
+            CREATE TABLE IF NOT EXISTS resume_analyses (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                filename TEXT,
+                summary TEXT,
+                created_at TEXT NOT NULL
+            )
+        """)
+
+
+def log_event(level, message, details=""):
+    with get_db_connection() as connection:
+        connection.execute(
+            """
+            INSERT INTO app_events (level, message, details, created_at)
+            VALUES (?, ?, ?, ?)
+            """,
+            (level, message, details, datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        )
+
+
+def save_career_analysis(profile, ai_result):
+    with get_db_connection() as connection:
+        connection.execute(
+            """
+            INSERT INTO career_analyses (
+                degree, year, specialization, interest, skills, languages,
+                industry, work_style, location, goal, ai_result, created_at
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                profile["degree"],
+                profile["year"],
+                profile["specialization"],
+                profile["interest"],
+                profile["skills"],
+                profile["languages"],
+                profile["industry"],
+                profile["work"],
+                profile["location"],
+                profile["goal"],
+                ai_result,
+                datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            )
+        )
+
+
+def save_resume_analysis(filename, summary):
+    with get_db_connection() as connection:
+        connection.execute(
+            """
+            INSERT INTO resume_analyses (filename, summary, created_at)
+            VALUES (?, ?, ?)
+            """,
+            (filename, summary, datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        )
+
+
+init_db()
 
 
 @app.route("/")
@@ -40,14 +139,26 @@ def result():
     degree = request.form["degree"]
     year = request.form["year"]
     specialization = request.form["specialization"]
-    interest = request.form["interest"]
-    skills = request.form["skills"]
-    languages = request.form["languages"]
-    experience = request.form["experience"]
+    interest = ", ".join(request.form.getlist("interest"))
+    skills = ", ".join(request.form.getlist("skills"))
+    languages = ", ".join(request.form.getlist("languages")) or "Not specified"
     industry = request.form["industry"]
     work = request.form["work"]
-    location = request.form["location"]
+    location = ", ".join(request.form.getlist("location"))
     goal = request.form["goal"]
+
+    profile = {
+        "degree": degree,
+        "year": year,
+        "specialization": specialization,
+        "interest": interest,
+        "skills": skills,
+        "languages": languages,
+        "industry": industry,
+        "work": work,
+        "location": location,
+        "goal": goal
+    }
 
     prompt = f"""
 You are Career Compass AI, an expert AI career counselor.
@@ -62,7 +173,6 @@ Specialization: {specialization}
 Career Interest: {interest}
 Technical Skills: {skills}
 Programming Languages: {languages}
-Experience Level: {experience}
 Preferred Industry: {industry}
 Preferred Work Style: {work}
 Preferred Location: {location}
@@ -140,8 +250,11 @@ Write personalized career advice based on the student's profile.
             contents=prompt
         )
         ai_result = response.text
+        save_career_analysis(profile, ai_result)
+        log_event("info", "Career analysis completed", f"Degree: {degree}; Interests: {interest}")
     except Exception as e:
         ai_result = f"Error generating AI recommendation.\n\n{str(e)}"
+        log_event("error", "Career analysis failed", str(e))
 
     return render_template(
         "result.html",
@@ -151,7 +264,6 @@ Write personalized career advice based on the student's profile.
         interest=interest,
         skills=skills,
         languages=languages,
-        experience=experience,
         industry=industry,
         work=work,
         location=location,
@@ -165,18 +277,42 @@ def summarizer():
     return render_template("summarizer.html")
 
 
+@app.route("/admin/logs")
+def admin_logs():
+    with get_db_connection() as connection:
+        events = connection.execute(
+            "SELECT * FROM app_events ORDER BY id DESC LIMIT 100"
+        ).fetchall()
+        career_analyses = connection.execute(
+            "SELECT * FROM career_analyses ORDER BY id DESC LIMIT 20"
+        ).fetchall()
+        resume_analyses = connection.execute(
+            "SELECT * FROM resume_analyses ORDER BY id DESC LIMIT 20"
+        ).fetchall()
+
+    return render_template(
+        "admin_logs.html",
+        events=events,
+        career_analyses=career_analyses,
+        resume_analyses=resume_analyses
+    )
+
+
 @app.route("/summarize", methods=["POST"])
 def summarize():
     try:
         if "pdf" not in request.files:
+            log_event("warning", "Resume upload failed", "No PDF uploaded.")
             return render_template("summarizer.html", error="No PDF uploaded.")
 
         pdf = request.files["pdf"]
 
         if pdf.filename == "":
+            log_event("warning", "Resume upload failed", "Empty filename.")
             return render_template("summarizer.html", error="Please select a PDF file.")
 
         if not allowed_pdf(pdf.filename):
+            log_event("warning", "Resume upload rejected", f"Invalid file type: {pdf.filename}")
             return render_template("summarizer.html", error="Only PDF files are allowed.")
 
         filename = secure_filename(pdf.filename)
@@ -192,18 +328,57 @@ def summarize():
                 text += extracted
 
         if text.strip() == "":
+            log_event("warning", "Resume analysis failed", f"No readable text found in {filename}")
             return render_template("summarizer.html", error="No readable text found in PDF.")
 
         prompt = f"""
-Summarize this report.
+You are Career Compass AI, an expert resume reviewer and career advisor.
 
-Provide:
-- Main Topic
-- Key Findings
-- Important Points
-- Conclusion
+Analyze this resume and create a professional resume summary with job recommendations.
 
-Report:
+Provide the output using this structure:
+
+# Resume Analysis Report
+
+## Candidate Summary
+Write a concise 4-5 line professional summary based on the resume.
+
+## Key Skills Found
+- Skill 1
+- Skill 2
+- Skill 3
+- Skill 4
+- Skill 5
+
+## Experience Level
+Classify the candidate as Fresher, Entry Level, Mid Level, or Senior Level.
+Explain the reason briefly.
+
+## Best Job Recommendations
+Recommend the top 5 suitable job roles.
+For each role, include:
+- Job Role
+- Match Score
+- Why it matches
+- Skills to improve
+
+## Resume Strengths
+- Strength 1
+- Strength 2
+- Strength 3
+
+## Missing Skills or Gaps
+- Gap 1
+- Gap 2
+- Gap 3
+
+## Improvement Suggestions
+Give practical resume and career improvement suggestions.
+
+## Final Career Advice
+Give short personalized advice for the candidate's next step.
+
+Resume Text:
 {text}
 """
 
@@ -212,10 +387,13 @@ Report:
             contents=prompt
         )
         summary = response.text
+        save_resume_analysis(filename, summary)
+        log_event("info", "Resume analysis completed", f"Filename: {filename}")
 
         return render_template("summary.html", summary=summary)
 
     except Exception as e:
+        log_event("error", "Resume analysis failed", str(e))
         return render_template("summarizer.html", error=f"Error: {e}")
 
 
