@@ -20,6 +20,7 @@
             <a class="nav-link" href="/career">Career</a>
             <a class="nav-link" href="/summarizer">Resume Analyzer</a>
             <a class="nav-link" href="/admin/logs">Logs</a>
+            <a class="nav-link" href="/history">History</a>
         </div>
     </div>
 </nav>
@@ -46,11 +47,14 @@
                         <button type="button" class="btn btn-outline-light" id="downloadSummary">
                             <i class="bi bi-download me-2"></i>Download
                         </button>
+                        <button type="button" class="btn btn-outline-light" onclick="window.print()">
+                            <i class="bi bi-file-earmark-pdf me-2"></i>Export PDF
+                        </button>
                     </div>
                 </div>
 
                 <hr>
-                <div id="summaryText" class="summary-box">{{ summary }}</div>
+                <div id="summaryText" class="summary-box printable-report">{{ summary }}</div>
                 <hr class="my-4">
 
                 <div class="row g-3">

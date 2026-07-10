@@ -273,6 +273,52 @@ textarea.form-control {
     white-space: pre-wrap;
 }
 
+.report-kicker {
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.profile-item {
+    padding: 15px;
+    background: #f8fafc;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+}
+
+.profile-item span {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.profile-item strong {
+    display: block;
+    color: #1e293b;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+.report-box {
+    font-size: 15px;
+    line-height: 1.9;
+    color: #1f2937;
+    background:
+        linear-gradient(180deg, #ffffff 0, #f8fafc 100%) !important;
+    border-left: 4px solid var(--primary);
+}
+
 .alert-danger {
     border-radius: 8px;
     border: 1px solid #fecaca;
@@ -332,6 +378,16 @@ textarea.form-control {
     background: #f8fafc;
     border: 1px solid var(--line);
     border-radius: 8px;
+}
+
+.analysis-item summary {
+    cursor: pointer;
+    color: #1e293b;
+}
+
+.btn-sm {
+    padding: 7px 11px;
+    font-size: 13px;
 }
 
 /* Utilities */
@@ -431,5 +487,46 @@ footer p {
     .card.p-5,
     .card.p-4 {
         padding: 24px !important;
+    }
+
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media print {
+    body {
+        background: #ffffff;
+    }
+
+    nav,
+    footer,
+    .btn,
+    .lead,
+    hr,
+    .d-grid,
+    .text-center,
+    .d-flex {
+        display: none !important;
+    }
+
+    main.container,
+    .card {
+        max-width: 100%;
+        min-height: auto;
+        padding: 0 !important;
+        margin: 0 !important;
+        border: 0;
+        box-shadow: none;
+    }
+
+    .printable-report {
+        display: block !important;
+        color: #111827;
+        background: #ffffff !important;
+        border: 0;
+        padding: 0;
+        font-size: 12px;
+        line-height: 1.6;
     }
 }

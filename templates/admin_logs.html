@@ -20,6 +20,8 @@
             <a class="nav-link" href="/career">Career</a>
             <a class="nav-link" href="/summarizer">Resume Analyzer</a>
             <a class="nav-link active" href="/admin/logs">Logs</a>
+            <a class="nav-link" href="/history">History</a>
+            <a class="nav-link" href="/admin/logout">Logout</a>
         </div>
     </div>
 </nav>
@@ -35,7 +37,20 @@
     <div class="card p-4 mb-4">
         <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
             <h3 class="mb-0">Events</h3>
-            <span class="text-light">Latest 100 records</span>
+            <div class="d-flex flex-wrap gap-2">
+                <form method="POST" action="/admin/logs/clear">
+                    <input type="hidden" name="level" value="warning">
+                    <button class="btn btn-outline-light btn-sm" type="submit">Clear Warnings</button>
+                </form>
+                <form method="POST" action="/admin/logs/clear">
+                    <input type="hidden" name="level" value="error">
+                    <button class="btn btn-outline-light btn-sm" type="submit">Clear Errors</button>
+                </form>
+                <form method="POST" action="/admin/logs/clear">
+                    <input type="hidden" name="level" value="all">
+                    <button class="btn btn-outline-light btn-sm" type="submit">Clear All</button>
+                </form>
+            </div>
         </div>
         <div class="table-responsive">
             <table class="table align-middle">

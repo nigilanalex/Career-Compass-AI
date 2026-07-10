@@ -1,15 +1,23 @@
-from flask import Flask, render_template, request
+from flask import Flask, redirect, render_template, request, session, url_for
 from google import genai
 from pypdf import PdfReader
 from werkzeug.utils import secure_filename
 from datetime import datetime
+from functools import wraps
 import os
+import requests
 import sqlite3
 
 try:
-    from config import GEMINI_API_KEY
+    import config
 except ImportError:
-    GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
+    config = None
+
+
+def config_value(name, default=None):
+    if config and hasattr(config, name):
+        return getattr(config, name)
+    return os.environ.get(name, default)
 
 
 app = Flask(__name__)
@@ -18,14 +26,35 @@ UPLOAD_FOLDER = "uploads"
 ALLOWED_EXTENSIONS = {"pdf"}
 DATABASE_PATH = "career_compass.db"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+app.secret_key = os.environ.get("SECRET_KEY", "career-compass-dev-secret")
+
+ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME", "admin")
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "admin123")
+
+AI_PROVIDER = config_value("AI_PROVIDER", "auto").lower()
+OPENAI_API_KEY = config_value("OPENAI_API_KEY")
+OPENAI_MODEL = config_value("OPENAI_MODEL", "gpt-4.1-mini")
+GEMINI_API_KEY = config_value("GEMINI_API_KEY")
+GEMINI_MODEL = config_value("GEMINI_MODEL", "gemini-2.5-flash")
+ENABLE_DEMO_FALLBACK = str(config_value("ENABLE_DEMO_FALLBACK", "true")).lower() == "true"
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-client = genai.Client(api_key=GEMINI_API_KEY)
+gemini_client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
 
 
 def allowed_pdf(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def admin_required(view):
+    @wraps(view)
+    def wrapped_view(*args, **kwargs):
+        if not session.get("admin_logged_in"):
+            return redirect(url_for("admin_login", next=request.path))
+        return view(*args, **kwargs)
+
+    return wrapped_view
 
 
 def get_db_connection():
@@ -161,9 +190,10 @@ def result():
     }
 
     prompt = f"""
-You are Career Compass AI, an expert AI career counselor.
+You are Career Compass AI, a senior career strategist and technical mentor.
 
-Analyze the student's profile and recommend the top 3 most suitable careers.
+Analyze the student's profile and write a polished, professional career advisory brief.
+Use confident, specific language. Avoid generic filler. Make the report sound like it was written by a real career consultant.
 
 Student Profile
 -----------------------
@@ -178,70 +208,97 @@ Preferred Work Style: {work}
 Preferred Location: {location}
 Career Goal: {goal}
 
-Generate a detailed professional report using this structure:
+Generate a detailed professional report using this exact structure:
 
-# AI Career Analysis Report
+# Career Advisory Brief
 
-## Recommendation 1
-Career:
+## Executive Summary
+Write 4-5 crisp lines explaining the student's current direction, strongest signal, and most realistic career path.
+
+## Career Fit Snapshot
+Overall Fit Score:
+Primary Career Direction:
+Strongest Current Skills:
+Biggest Skill Gap:
+Best Next Action:
+
+## Priority Recommendation 1
+Role:
 Match Score:
 Expected Salary:
 Job Demand:
-Top Hiring Companies:
-Why this Career:
-Skills to Learn:
-- Skill 1
-- Skill 2
-- Skill 3
-- Skill 4
-- Skill 5
+Best-Fit Companies:
+Why This Role Fits:
+Skills To Build Next:
+- Skill
+- Skill
+- Skill
+- Skill
+Starter Project:
 
-## Recommendation 2
-Career:
+## Priority Recommendation 2
+Role:
 Match Score:
 Expected Salary:
 Job Demand:
-Top Hiring Companies:
-Why this Career:
-Skills to Learn:
-- Skill 1
-- Skill 2
-- Skill 3
-- Skill 4
-- Skill 5
+Best-Fit Companies:
+Why This Role Fits:
+Skills To Build Next:
+- Skill
+- Skill
+- Skill
+- Skill
+Starter Project:
 
-## Recommendation 3
-Career:
+## Priority Recommendation 3
+Role:
 Match Score:
 Expected Salary:
 Job Demand:
-Top Hiring Companies:
-Why this Career:
-Skills to Learn:
-- Skill 1
-- Skill 2
-- Skill 3
-- Skill 4
-- Skill 5
+Best-Fit Companies:
+Why This Role Fits:
+Skills To Build Next:
+- Skill
+- Skill
+- Skill
+- Skill
+Starter Project:
 
-## 6-Month Learning Roadmap
-Month 1:
-Month 2:
-Month 3:
-Month 4:
-Month 5:
-Month 6:
+## Skill Gap Tracker
+Already Strong:
+- Skill
+- Skill
+
+Need to Learn:
+- Skill
+- Skill
+- Skill
+
+Suggested Projects:
+- Project
+- Project
+- Project
+
+## 90-Day Action Plan
+Days 1-30:
+Days 31-60:
+Days 61-90:
+
+## 6-Month Growth Roadmap
+Month 1-2:
+Month 3-4:
+Month 5-6:
 
 ## Recommended Certifications
-- Certification 1
-- Certification 2
-- Certification 3
+- Certification
+- Certification
+- Certification
 
 ## Industry Outlook
-Explain future demand for these careers over the next 5 years.
+Explain the demand, market direction, and hiring outlook for these roles.
 
-## Final Advice
-Write personalized career advice based on the student's profile.
+## Consultant's Final Advice
+Write a direct, motivating final paragraph with a clear next step.
 """
 
     try:
@@ -277,7 +334,33 @@ def summarizer():
     return render_template("summarizer.html")
 
 
+@app.route("/admin/login", methods=["GET", "POST"])
+def admin_login():
+    error = None
+
+    if request.method == "POST":
+        username = request.form.get("username", "")
+        password = request.form.get("password", "")
+
+        if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+            session["admin_logged_in"] = True
+            log_event("info", "Admin login successful", f"Username: {username}")
+            return redirect(request.args.get("next") or url_for("admin_logs"))
+
+        error = "Invalid username or password."
+        log_event("warning", "Admin login failed", f"Username: {username}")
+
+    return render_template("admin_login.html", error=error)
+
+
+@app.route("/admin/logout")
+def admin_logout():
+    session.pop("admin_logged_in", None)
+    return redirect(url_for("admin_login"))
+
+
 @app.route("/admin/logs")
+@admin_required
 def admin_logs():
     with get_db_connection() as connection:
         events = connection.execute(
@@ -296,6 +379,41 @@ def admin_logs():
         career_analyses=career_analyses,
         resume_analyses=resume_analyses
     )
+
+
+@app.route("/history")
+@admin_required
+def history():
+    with get_db_connection() as connection:
+        career_analyses = connection.execute(
+            "SELECT * FROM career_analyses ORDER BY id DESC"
+        ).fetchall()
+        resume_analyses = connection.execute(
+            "SELECT * FROM resume_analyses ORDER BY id DESC"
+        ).fetchall()
+
+    return render_template(
+        "history.html",
+        career_analyses=career_analyses,
+        resume_analyses=resume_analyses
+    )
+
+
+@app.route("/admin/logs/clear", methods=["POST"])
+@admin_required
+def clear_logs():
+    level = request.form.get("level", "all")
+
+    with get_db_connection() as connection:
+        if level == "all":
+            connection.execute("DELETE FROM app_events")
+            message = "All logs cleared"
+        else:
+            connection.execute("DELETE FROM app_events WHERE level = ?", (level,))
+            message = f"{level.title()} logs cleared"
+
+    log_event("info", "Admin maintenance", message)
+    return redirect(url_for("admin_logs"))
 
 
 @app.route("/summarize", methods=["POST"])
@@ -340,6 +458,13 @@ Provide the output using this structure:
 
 # Resume Analysis Report
 
+## Resume Score
+Overall Resume Score: /100
+ATS Friendliness: /100
+Skills Clarity: /100
+Project Strength: /100
+Experience Quality: /100
+
 ## Candidate Summary
 Write a concise 4-5 line professional summary based on the resume.
 
@@ -359,8 +484,23 @@ Recommend the top 5 suitable job roles.
 For each role, include:
 - Job Role
 - Match Score
+- Expected Salary Range
 - Why it matches
 - Skills to improve
+
+## Skill Gap Tracker
+Already Strong:
+- Skill 1
+- Skill 2
+
+Need to Improve:
+- Skill 1
+- Skill 2
+- Skill 3
+
+Suggested Projects:
+- Project 1
+- Project 2
 
 ## Resume Strengths
 - Strength 1
