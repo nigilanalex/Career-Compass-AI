@@ -1,5 +1,5 @@
 from flask import Flask, redirect, render_template, request, session, url_for
-from google import genai
+from groq import Groq
 from pypdf import PdfReader
 from werkzeug.utils import secure_filename
 from datetime import datetime
@@ -34,14 +34,13 @@ ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "admin123")
 AI_PROVIDER = config_value("AI_PROVIDER", "auto").lower()
 OPENAI_API_KEY = config_value("OPENAI_API_KEY")
 OPENAI_MODEL = config_value("OPENAI_MODEL", "gpt-4.1-mini")
-GEMINI_API_KEY = config_value("GEMINI_API_KEY")
-GEMINI_MODEL = config_value("GEMINI_MODEL", "gemini-2.5-flash")
+GROQ_API_KEY = config_value("GROQ_API_KEY")
+GROQ_MODEL = "llama-3.3-70b-versatile"
 ENABLE_DEMO_FALLBACK = str(config_value("ENABLE_DEMO_FALLBACK", "true")).lower() == "true"
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-gemini_client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
-client = gemini_client
+client = Groq(api_key=GROQ_API_KEY)
 
 
 
@@ -304,13 +303,25 @@ Write a direct, motivating final paragraph with a clear next step.
 """
 
     try:
-        response = client.models.generate_content(
-            model="gemini-2.0-flash",
-            contents=prompt
+        response = client.chat.completions.create(
+            model=GROQ_MODEL,
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ]
         )
-        ai_result = response.text
+
+        ai_result = response.choices[0].message.content
+
         save_career_analysis(profile, ai_result)
-        log_event("info", "Career analysis completed", f"Degree: {degree}; Interests: {interest}")
+        log_event(
+            "info",
+            "Career analysis completed",
+            f"Degree: {degree}; Interests: {interest}"
+        )
+
     except Exception as e:
         ai_result = f"Error generating AI recommendation.\n\n{str(e)}"
         log_event("error", "Career analysis failed", str(e))
@@ -524,11 +535,17 @@ Resume Text:
 {text}
 """
 
-        response = client.models.generate_content(
-            model="gemini-2.0-flash",
-            contents=prompt
+        response = client.chat.completions.create(
+            model=GROQ_MODEL,
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ]
         )
-        summary = response.text
+
+        summary = response.choices[0].message.content
         save_resume_analysis(filename, summary)
         log_event("info", "Resume analysis completed", f"Filename: {filename}")
 
