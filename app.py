@@ -41,6 +41,8 @@ ENABLE_DEMO_FALLBACK = str(config_value("ENABLE_DEMO_FALLBACK", "true")).lower()
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 gemini_client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
+client = gemini_client
+
 
 
 def allowed_pdf(filename):
@@ -303,7 +305,7 @@ Write a direct, motivating final paragraph with a clear next step.
 
     try:
         response = client.models.generate_content(
-            model="gemini-2.5-flash",
+            model="gemini-2.0-flash",
             contents=prompt
         )
         ai_result = response.text
@@ -523,7 +525,7 @@ Resume Text:
 """
 
         response = client.models.generate_content(
-            model="gemini-2.5-flash",
+            model="gemini-2.0-flash",
             contents=prompt
         )
         summary = response.text
